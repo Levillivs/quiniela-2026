@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mundial de los Factos 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#1a1a1a;padding:2rem 1rem}
+.container{max-width:960px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:13px;color:#666;margin-bottom:2rem}
+h2{font-size:12px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.section{margin-bottom:2.5rem}
+.divider{border:none;border-top:1px solid #e0deda;margin:2rem 0}
+.name-row{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.name-row label{font-size:14px;color:#555;white-space:nowrap}
+input[type=text]{padding:7px 11px;border:1px solid #d0cec8;border-radius:8px;background:#fff;font-size:13px;color:#1a1a1a;outline:none;font-family:inherit}
+input[type=text]:focus{border-color:#888}
+.name-row input{flex:1;font-size:14px}
+.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.card{background:#fff;border:1px solid #e0deda;border-radius:10px;padding:.9rem 1rem}
+.group-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.05em;margin-bottom:8px;text-transform:uppercase}
+.match-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;margin-bottom:7px}
+.match-row:last-child{margin-bottom:0}
+.team{font-size:13px;font-weight:500}
+.team.right{text-align:right}
+.result-btns{display:flex;gap:3px}
+.rb{border:1px solid #ccc;border-radius:5px;background:#fff;color:#666;font-size:11px;padding:3px 8px;cursor:pointer;transition:all .1s;font-family:inherit}
+.rb:hover{background:#f0efeb}
+.rb.sel-L{background:#dbeeff;border-color:#5599dd;color:#1a4a88;font-weight:600}
+.rb.sel-E{background:#eeecea;border-color:#999;color:#333;font-weight:600}
+.rb.sel-V{background:#fde8de;border-color:#cc6633;color:#7a2a0a;font-weight:600}
+.standings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.standings-card{background:#fff;border:1px solid #e0deda;border-radius:10px;padding:.9rem 1rem}
+.slot-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.slot-row:last-child{margin-bottom:0}
+.slot-label{font-size:11px;color:#888;min-width:18px;text-align:right}
+.slot-input{flex:1;font-size:13px;padding:5px 8px;border:1px solid #d0cec8;border-radius:6px;background:#f8f7f4;color:#1a1a1a;outline:none;font-family:inherit}
+.slot-input:focus{border-color:#888;background:#fff}
+.slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px;margin-top:8px}
+.final-row{display:grid;grid-template-columns:1fr 30px 1fr;gap:8px;align-items:center;margin-top:8px}
+.final-input{width:100%;font-size:13px;padding:7px 10px;border:1px solid #d0cec8;border-radius:8px;background:#f8f7f4;color:#1a1a1a;outline:none;font-family:inherit}
+.final-input:focus{border-color:#888;background:#fff}
+.vs{text-align:center;font-size:12px;color:#888}
+.champ-row{margin-top:14px;display:flex;align-items:center;gap:10px}
+.champ-input{font-size:15px;font-weight:600;padding:9px 13px;border:1px solid #bbb;border-radius:8px;background:#fff;color:#1a1a1a;outline:none;font-family:inherit;flex:1;max-width:300px}
+.champ-input:focus{border-color:#555}
+.awards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:8px}
+.award-card{background:#fff;border:1px solid #e0deda;border-radius:10px;padding:.9rem 1rem}
+.award-title{font-size:13px;font-weight:600;color:#333;margin-bottom:2px}
+.award-sub{font-size:11px;color:#888;margin-bottom:8px}
+.award-input{width:100%;font-size:13px;padding:6px 9px;border:1px solid #d0cec8;border-radius:6px;background:#f8f7f4;color:#1a1a1a;outline:none;font-family:inherit}
+.award-input:focus{border-color:#888;background:#fff}
+.btn-row{margin-top:2.5rem;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+button{padding:10px 1.6rem;border:1px solid #bbb;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-save{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn-save:hover{background:#333}
+.btn-save:disabled{background:#999;border-color:#999;cursor:not-allowed}
+.btn-print{background:#fff;color:#1a1a1a}
+.btn-print:hover{background:#f0efeb}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+.ranking-section{margin-top:3rem;padding-top:2rem;border-top:2px solid #e0deda}
+.ranking-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+.ranking-table th{text-align:left;padding:8px 10px;background:#f0efeb;font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.04em}
+.ranking-table td{padding:8px 10px;border-bottom:1px solid #e0deda}
+.ranking-table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-ok{background:#d4edda;color:#155724}
+.status-bar{background:#fff;border:1px solid #e0deda;border-radius:8px;padding:10px 14px;margin-bottom:1.5rem;font-size:13px;color:#555;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0}
+.dot.green{background:#28a745}
+.dot.yellow{background:#ffc107}
+@media print{body{background:#fff;padding:.5rem}.btn-row,.ranking-section,.toast{display:none}.card,.standings-card,.award-card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🏆 Mundial de los Factos 2026</h1>
+  <p class="subtitle">Copa Mundial FIFA · Canadá · México · EE.UU. · 11 jun – 19 jul 2026</p>
+
+  <div id="statusBar" class="status-bar">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusMsg">Conectando con la base de datos...</span>
+  </div>
+
+  <div class="name-row">
+    <label>Tu nombre:</label>
+    <input type="text" id="playerName" placeholder="¿Cómo te llamas?" />
+  </div>
+
+  <div class="section">
+    <h2>Fase de grupos · L = local gana · E = empate · V = visita gana</h2>
+    <div class="group-grid" id="groupsContainer"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Primero y segundo de cada grupo</h2>
+    <div class="standings-grid" id="standingsContainer"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Mejores terceros · 8 clasifican</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:8px">Los 8 mejores terceros de los 12 grupos avanzan a 32avos</p>
+    <div class="slots-grid" id="top3Container"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>32avos de final · 32 equipos</h2>
+    <div class="slots-grid" id="r32Container"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Octavos de final · 16 equipos</h2>
+    <div class="slots-grid" id="r16Container"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Cuartos de final · 8 equipos</h2>
+    <div class="slots-grid" id="qfContainer"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Semifinales · 4 equipos</h2>
+    <div class="slots-grid" id="sfContainer"></div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>La final</h2>
+    <div class="final-row">
+      <input class="final-input" type="text" placeholder="Finalista 1" id="f1" />
+      <span class="vs">vs</span>
+      <input class="final-input" type="text" placeholder="Finalista 2" id="f2" />
+    </div>
+    <div class="champ-row">
+      <span style="font-size:14px;color:#555">🏆 Campeón:</span>
+      <input class="champ-input" type="text" placeholder="Selección campeona" id="champ" />
+    </div>
+  </div>
+  <hr class="divider">
+
+  <div class="section">
+    <h2>Premios individuales</h2>
+    <div class="awards-grid">
+      <div class="award-card">
+        <div class="award-title">⚽ Goleador</div>
+        <div class="award-sub">Bota de Oro</div>
+        <input class="award-input" type="text" placeholder="Nombre del jugador" id="topscorer" />
+      </div>
+      <div class="award-card">
+        <div class="award-title">🌟 Mejor jugador</div>
+        <div class="award-sub">Balón de Oro del Mundial</div>
+        <input class="award-input" type="text" placeholder="Nombre del jugador" id="bestplayer" />
+      </div>
+      <div class="award-card">
+        <div class="award-title">🧤 Mejor portero</div>
+        <div class="award-sub">Guante de Oro</div>
+        <input class="award-input" type="text" placeholder="Nombre del portero" id="bestgk" />
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-save" id="saveBtn" onclick="saveQuiniela()">💾 Guardar quiniela</button>
+    <button class="btn-print" onclick="window.print()">🖨 Imprimir / PDF</button>
+  </div>
+
+  <div class="ranking-section">
+    <h2>Quinielas guardadas</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Todos los que han guardado su quiniela</p>
+    <div id="rankingContainer"><p style="font-size:13px;color:#888">Cargando...</p></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMOH-b2lxPW-238vbIg2xLQOQHvrMo5Y9srAi8tqTeoU-Z88cqd3lxhYc5Tozt7AWP/exec";
+
+const GROUPS = {
+  A: ["México","Sudáfrica","Corea","Chequia"],
+  B: ["Canadá","Bosnia","Qatar","Suiza"],
+  C: ["Brasil","Marruecos","Haití","Escocia"],
+  D: ["EE.UU.","Paraguay","Australia","Turquía"],
+  E: ["Alemania","Curazao","C. de Marfil","Ecuador"],
+  F: ["Países Bajos","Japón","Suecia","Túnez"],
+  G: ["Bélgica","Egipto","Irán","N. Zelanda"],
+  H: ["España","Cabo Verde","Arabia S.","Uruguay"],
+  I: ["Francia","Senegal","Irak","Noruega"],
+  J: ["Argentina","Argelia","Austria","Jordania"],
+  K: ["Portugal","RD Congo","Uzbekistán","Colombia"],
+  L: ["Inglaterra","Croacia","Ghana","Panamá"]
+};
+
+const matchResults = {};
+
+function getMatches(teams) {
+  const m = [];
+  for(let i=0;i<teams.length;i++)
+    for(let j=i+1;j<teams.length;j++)
+      m.push([teams[i],teams[j]]);
+  return m;
+}
+
+function selectResult(gid, mid, res) {
+  if(!matchResults[gid]) matchResults[gid]={};
+  matchResults[gid][mid]=res;
+  document.querySelectorAll(`[data-gid="${gid}"][data-mid="${mid}"]`).forEach(b=>{
+    b.classList.remove('sel-L','sel-E','sel-V');
+    if(b.dataset.res===res) b.classList.add('sel-'+res);
+  });
+}
+
+function buildGroups() {
+  const c = document.getElementById('groupsContainer');
+  Object.entries(GROUPS).forEach(([g, teams])=>{
+    const matches = getMatches(teams);
+    const card = document.createElement('div');
+    card.className='card';
+    let html=`<div class="group-label">Grupo ${g}</div>`;
+    matches.forEach(([local,visita])=>{
+      const mid=`${local}-${visita}`;
+      html+=`<div class="match-row">
+        <span class="team">${local}</span>
+        <div class="result-btns">
+          <button class="rb" data-gid="${g}" data-mid="${mid}" data-res="L" onclick="selectResult('${g}','${mid}','L')">L</button>
+          <button class="rb" data-gid="${g}" data-mid="${mid}" data-res="E" onclick="selectResult('${g}','${mid}','E')">E</button>
+          <button class="rb" data-gid="${g}" data-mid="${mid}" data-res="V" onclick="selectResult('${g}','${mid}','V')">V</button>
+        </div>
+        <span class="team right">${visita}</span>
+      </div>`;
+    });
+    card.innerHTML=html;
+    c.appendChild(card);
+  });
+}
+
+function buildStandings() {
+  const c = document.getElementById('standingsContainer');
+  Object.entries(GROUPS).forEach(([g, teams])=>{
+    const card = document.createElement('div');
+    card.className='standings-card';
+    let opts = teams.map(t=>`<option value="${t}">`).join('');
+    card.innerHTML=`<div class="group-label">Grupo ${g}</div>
+    <datalist id="dl_${g}">${opts}</datalist>
+    <div class="slot-row" style="margin-bottom:6px">
+      <span class="slot-label">1°</span>
+      <input class="slot-input" type="text" placeholder="${teams[0]}" id="s1_${g}" list="dl_${g}" />
+    </div>
+    <div class="slot-row">
+      <span class="slot-label">2°</span>
+      <input class="slot-input" type="text" placeholder="${teams[1]}" id="s2_${g}" list="dl_${g}" />
+    </div>`;
+    c.appendChild(card);
+  });
+}
+
+function buildSlots(id, count, prefix) {
+  const c = document.getElementById(id);
+  for(let i=0;i<count;i++){
+    const d=document.createElement('div');
+    d.className='slot-row';
+    d.innerHTML=`<span class="slot-label">${i+1}</span><input class="slot-input" type="text" placeholder="Equipo ${i+1}" id="${prefix}_${i}" />`;
+    c.appendChild(d);
+  }
+}
+
+function collectData() {
+  const q = { grupos:{}, standings:{}, top3:[], r32:[], r16:[], qf:[], sf:[],
+    f1:'', f2:'', campeon:'', goleador:'', mejorJugador:'', mejorPortero:'' };
+
+  Object.entries(GROUPS).forEach(([g, teams])=>{
+    q.grupos[g] = matchResults[g] || {};
+    q.standings[g] = {
+      primero: document.getElementById(`s1_${g}`)?.value||'',
+      segundo: document.getElementById(`s2_${g}`)?.value||''
+    };
+  });
+  for(let i=0;i<8;i++) q.top3.push(document.getElementById(`t3_${i}`)?.value||'');
+  for(let i=0;i<32;i++) q.r32.push(document.getElementById(`r32_${i}`)?.value||'');
+  for(let i=0;i<16;i++) q.r16.push(document.getElementById(`r16_${i}`)?.value||'');
+  for(let i=0;i<8;i++) q.qf.push(document.getElementById(`qf_${i}`)?.value||'');
+  for(let i=0;i<4;i++) q.sf.push(document.getElementById(`sf_${i}`)?.value||'');
+  q.f1 = document.getElementById('f1')?.value||'';
+  q.f2 = document.getElementById('f2')?.value||'';
+  q.campeon = document.getElementById('champ')?.value||'';
+  q.goleador = document.getElementById('topscorer')?.value||'';
+  q.mejorJugador = document.getElementById('bestplayer')?.value||'';
+  q.mejorPortero = document.getElementById('bestgk')?.value||'';
+  return q;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function setStatus(ok, msg) {
+  document.getElementById('statusDot').className = 'dot ' + (ok ? 'green' : 'yellow');
+  document.getElementById('statusMsg').textContent = msg;
+}
+
+async function saveQuiniela() {
+  const name = document.getElementById('playerName').value.trim();
+  if(!name){ showToast('⚠ Escribe tu nombre primero'); return; }
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  try {
+    await fetch(SCRIPT_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ nombre: name, timestamp: new Date().toLocaleString('es-MX'), quiniela: collectData() })
+    });
+    showToast('✅ Quiniela guardada');
+    setStatus(true, 'Quiniela guardada correctamente');
+    setTimeout(loadRanking, 1500);
+  } catch(e) {
+    showToast('❌ Error al guardar. Intenta de nuevo.');
+    setStatus(false, 'Error de conexión');
+  }
+  btn.disabled = false;
+  btn.textContent = '💾 Guardar quiniela';
+}
+
+async function loadRanking() {
+  try {
+    const res = await fetch(SCRIPT_URL + '?t=' + Date.now());
+    const data = await res.json();
+    const c = document.getElementById('rankingContainer');
+    if(!data.length){ c.innerHTML='<p style="font-size:13px;color:#888">Aún no hay quinielas guardadas.</p>'; return; }
+    let html = `<table class="ranking-table"><thead><tr><th>#</th><th>Jugador</th><th>Campeón</th><th>Goleador</th><th>Guardado</th></tr></thead><tbody>`;
+    data.forEach((d,i)=>{
+      const q = d.quiniela||{};
+      html+=`<tr><td>${i+1}</td><td><strong>${d.nombre}</strong></td><td>${q.campeon||'—'}</td><td>${q.goleador||'—'}</td><td style="color:#888;font-size:12px">${d.timestamp||''}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    c.innerHTML = html;
+    setStatus(true, `${data.length} quiniela${data.length>1?'s':''} registrada${data.length>1?'s':''}`);
+  } catch(e) {
+    document.getElementById('rankingContainer').innerHTML='<p style="font-size:13px;color:#888">No se pudo cargar el ranking.</p>';
+  }
+}
+
+buildGroups();
+buildStandings();
+buildSlots('top3Container', 8, 't3');
+buildSlots('r32Container', 32, 'r32');
+buildSlots('r16Container', 16, 'r16');
+buildSlots('qfContainer', 8, 'qf');
+buildSlots('sfContainer', 4, 'sf');
+loadRanking();
+</script>
+</body>
+</html>
